@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Check, User, Bot } from 'lucide-react';
-import type { Message } from 'nexus-shared';
+// import type { Message } from 'nexus-shared';
+import type { Message } from '../types';
 
 interface MessageBubbleProps {
   message: Message;
@@ -31,24 +32,23 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
               : 'bg-gray-800 text-gray-100 rounded-tl-sm'
           }`}
         >
-          <ReactMarkdown
-            className="prose prose-invert prose-sm max-w-none"
-            components={{
-              code: ({ node, inline, className, children, ...props }) => {
-                return inline ? (
-                  <code className="bg-gray-700 px-1.5 py-0.5 rounded text-sm" {...props}>
-                    {children}
-                  </code>
-                ) : (
-                  <code className="block bg-gray-900 p-3 rounded-lg text-sm overflow-x-auto" {...props}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          >
-            {message.content}
-          </ReactMarkdown>
+      <ReactMarkdown
+  className="prose prose-invert prose-sm max-w-none"
+  components={{
+    code: ({ className, children, ...props }: any) => {
+      return (
+        <code
+          className="block bg-gray-900 p-3 rounded-lg text-sm overflow-x-auto"
+          {...props}
+        >
+          {children}
+        </code>
+      );
+    },
+  }}
+>
+  {message.content}
+</ReactMarkdown>
         </div>
       </div>
     </div>

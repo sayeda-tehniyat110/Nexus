@@ -1,3 +1,3 @@
-export default function ModelSelector() {
+export default function ModelSelector({ activeModel, onModelChange }) {
   return null;
 }

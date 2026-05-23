@@ -1,6 +1,7 @@
 import React from 'react';
 import { Check, X, Play, AlertTriangle } from 'lucide-react';
-import type { Action } from 'nexus-shared';
+// import type { Action } from 'nexus-shared';
+import type { Action } from '../types';
 
 interface ActionCardProps {
   action: Action;

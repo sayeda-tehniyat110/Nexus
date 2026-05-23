@@ -4,7 +4,8 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Copy, Check } from 'lucide-react';
 import { useState } from 'react';
-import type { Message } from '@nexus/shared';
+// import type { Message } from '@nexus/shared';
+import type { Message } from '../types';
 
 interface ChatMessageProps {
   message: Message;
@@ -81,7 +82,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
         </ReactMarkdown>
         {message.images && message.images.length > 0 && (
           <div className="mt-2 flex gap-2">
-            {message.images.map((img, i) => (
+            {message.images.map((img: any, i: number) => (
               <img
                 key={i}
                 src={`data:image/png;base64,${img}`}

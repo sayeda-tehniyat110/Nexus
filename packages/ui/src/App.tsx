@@ -4,7 +4,9 @@ import Calendar from "./components/Calendar";
 // import { useState, useEffect, useRef } from 'react';
 import { MessageSquare, Settings, Plus, Send, StopCircle, Image as ImageIcon, Mic } from 'lucide-react';
 import ChatMessage from './components/ChatMessage';
-import ActionCard from './components/ActionCard';
+// import ActionCard from './components/ActionCard';
+// import { ActionCard } from './components/ActionCard';
+import { ActionCard } from './components/ActionCard';
 import Sidebar from './components/Sidebar';
 import ModelSelector from './components/ModelSelector';
 // import type { Message, Action, LLMModel } from '@nexus/shared';
@@ -132,7 +134,7 @@ export default function App() {
                 <ActionCard
                   action={pendingAction}
                   onApprove={handleApproveAction}
-                  onCancel={handleCancelAction}
+                  onReject={handleCancelAction}
                 />
               )}
               <div ref={messagesEndRef} />
