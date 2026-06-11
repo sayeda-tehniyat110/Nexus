@@ -1,15 +1,17 @@
 import './index.css';
-import { useState, useEffect, useRef } from 'react';
-import Calendar from "./components/Calendar";
-// import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, Settings, Plus, Send, StopCircle, Image as ImageIcon, Mic } from 'lucide-react';
+
+// Components Imports
+import Calendar from "./components/Calendar";
+import VideoCallSection from './components/VideoCallSection';
+import DocumentChamber from './components/DocumentChamber';
 import ChatMessage from './components/ChatMessage';
-// import ActionCard from './components/ActionCard';
-// import { ActionCard } from './components/ActionCard';
 import { ActionCard } from './components/ActionCard';
 import Sidebar from './components/Sidebar';
 import ModelSelector from './components/ModelSelector';
-// import type { Message, Action, LLMModel } from '@nexus/shared';
+
+// Types Definition
 type Message = { id: string; role: 'user' | 'assistant'; content: string; timestamp: number; };
 type Action = { id: string; type: string; description: string; params: any; status: string; timestamp: number; };
 type LLMModel = { id: string; name: string; provider: string; maxTokens: number; supportsVision: boolean; };
@@ -87,11 +89,15 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen text-foreground">
+    <div className="flex h-screen text-foreground bg-slate-950 overflow-hidden">
+      {/* Left Sidebar */}
       <Sidebar open={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
-      <div className="flex-1 flex flex-col">
-        <header className="h-14 border-b border-border flex items-center justify-between px-4">
+      {/* Main Workspace */}
+      <div className="flex-1 flex flex-col min-w-0">
+        
+        {/* Top Header */}
+        <header className="h-14 border-b border-border flex items-center justify-between px-4 bg-slate-900/50 backdrop-blur">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -99,21 +105,28 @@ export default function App() {
             >
               <MessageSquare className="w-5 h-5" />
             </button>
-            <h1 className="font-semibold">NEXUS</h1>
+            <h1 className="font-semibold tracking-wider text-blue-400">NEXUS</h1>
           </div>
           <ModelSelector activeModel={activeModel} onModelChange={setActiveModel} />
-          <button className="p-2 hover:bg-accent rounded-md transition-colors">
+          <button 
+            onClick={() => setActionPanelOpen(!actionPanelOpen)} 
+            className={`p-2 rounded-md transition-colors ${actionPanelOpen ? 'text-blue-400 bg-accent' : 'hover:bg-accent'}`}
+            title="Toggle Week 2 Panel"
+          >
             <Settings className="w-5 h-5" />
           </button>
         </header>
 
+        {/* Dynamic Inner Layout */}
         <div className="flex-1 flex overflow-hidden">
-          <div className="flex-1 flex flex-col">
+          
+          {/* Chat System Area */}
+          <div className="flex-1 flex flex-col border-r border-border bg-slate-900/20">
             <div className="flex-1 overflow-y-auto p-4">
               {messages.length === 0 && (
                 <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
-                  <MessageSquare className="w-16 h-16 mb-4 opacity-50" />
-                  <p className="text-lg mb-2">Start a conversation</p>
+                  <MessageSquare className="w-16 h-16 mb-4 opacity-50 text-blue-500" />
+                  <p className="text-lg mb-2 text-white">Start a conversation</p>
                   <p className="text-sm">Ask me to help you with any task on your computer</p>
                 </div>
               )}
@@ -121,11 +134,11 @@ export default function App() {
                 <ChatMessage key={message.id} message={message} />
               ))}
               {isTyping && (
-                <div className="flex items-center gap-2 text-muted-foreground">
+                <div className="flex items-center gap-2 text-muted-foreground my-2">
                   <div className="flex gap-1">
-                    <span className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <span className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <span className="w-2 h-2 bg-foreground rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                   <span className="text-sm">Thinking...</span>
                 </div>
@@ -140,24 +153,19 @@ export default function App() {
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="border-t border-border p-4">
+            {/* Input Bar Section */}
+            <div className="border-t border-border p-4 bg-slate-900/40">
               <div className="flex gap-2">
-                <button className="p-2 hover:bg-accent rounded-md transition-colors">
-                  <Plus className="w-5 h-5" />
-                </button>
-                <button className="p-2 hover:bg-accent rounded-md transition-colors">
-                  <ImageIcon className="w-5 h-5" />
-                </button>
-                <button className="p-2 hover:bg-accent rounded-md transition-colors">
-                  <Mic className="w-5 h-5" />
-                </button>
+                <button className="p-2 hover:bg-accent rounded-md transition-colors"><Plus className="w-5 h-5" /></button>
+                <button className="p-2 hover:bg-accent rounded-md transition-colors"><ImageIcon className="w-5 h-5" /></button>
+                <button className="p-2 hover:bg-accent rounded-md transition-colors"><Mic className="w-5 h-5" /></button>
                 <input
                   type="text"
                   value={input}
                   onChange={e => setInput(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSend()}
                   placeholder="Type your message..."
-                  className="flex-1 bg-background border border-border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="flex-1 bg-slate-950 border border-border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
                 />
                 {isTyping ? (
                   <button className="p-2 hover:bg-accent rounded-md transition-colors text-destructive">
@@ -167,7 +175,7 @@ export default function App() {
                   <button
                     onClick={handleSend}
                     disabled={!input.trim()}
-                    className="p-2 hover:bg-accent rounded-md transition-colors disabled:opacity-50"
+                    className="p-2 hover:bg-accent rounded-md transition-colors disabled:opacity-50 text-blue-400"
                   >
                     <Send className="w-5 h-5" />
                   </button>
@@ -176,15 +184,28 @@ export default function App() {
             </div>
           </div>
 
+          {/* Right Side Panel: Week 2 Features Integration */}
           {actionPanelOpen && (
-            <div className="w-80 border-l border-border p-4 overflow-y-auto">
-              <h3 className="font-semibold mb-4">Action Queue</h3>
-              <Calendar />
-              <div className="space-y-2">
-                <div className="text-sm text-muted-foreground">No actions in queue</div>
+            <div className="w-[450px] border-l border-border p-4 overflow-y-auto bg-slate-900/60 space-y-6 chunk-panel">
+              <div>
+                <h3 className="font-bold text-lg text-white mb-2 tracking-wide border-b border-border pb-2">
+                  🗓️ Action Queue & Calendar
+                </h3>
+                <Calendar />
+              </div>
+              
+              {/* Milestone 3: Video Calling Workspace */}
+              <div className="pt-2">
+                <VideoCallSection />
+              </div>
+              
+              {/* Milestone 4: Document Control Workspace */}
+              <div className="pt-2 text-slate-900">
+                <DocumentChamber />
               </div>
             </div>
           )}
+
         </div>
       </div>
     </div>
